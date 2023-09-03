@@ -5,3 +5,5 @@ THis is my MERN Stack project for online judge using MERN stack
 
 
 This is the commit from develop branch
+
+have added new rule , must require a approval to push the changes
