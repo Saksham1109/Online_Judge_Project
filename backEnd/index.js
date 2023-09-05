@@ -31,7 +31,7 @@ app.post('/run',async (req,res)=> {
 
 
 
-   console.log(language+ " -> " + code);
+   //console.log(language+ " -> " + code);
    res.json({language : language,code : code, filePath : filePath});
 });
 
