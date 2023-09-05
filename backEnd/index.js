@@ -1,25 +1,41 @@
 const express = require('express');
 const app = express();
-
+const {generateFile}= require('./generateFile');
 
  
-//MiddleWare 
+//MiddleWare  used decode data from url
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 
-
+// 1st api
 app.get("/",(req,res)=> {
-    res.json({online : "Compiler"});
+    res.json({online : "Compiler",MadeBy :"Saksham"});
 });
 
-app.post('/run',(req,res)=> {
-   const language=req.body.language;
-   const code = req.body.code;
+// 2nd api
+app.post('/run',async (req,res)=> {
+//    const language=req.body.language;
+//    const code = req.body.code;
+
+   const {language="cpp",code}= req.body;
+   if(code ==undefined)
+   {
+    return res.status(404).json({success : false, error :"The Code is empty, please enter your code!"})
+   }
+   // create a codes folder , and save the code in the file 
+   // Generating file 
+   const filePath = await generateFile(language,code);
+
+   // execute the code file 
+
+
+
+
    console.log(language+ " -> " + code);
-   res.json({language : code});
+   res.json({language : language,code : code, filePath : filePath});
 });
 
 
 app.listen(3000, () => {
     console.log("The server is listening/setup on port 3000");
-});
+}); 
