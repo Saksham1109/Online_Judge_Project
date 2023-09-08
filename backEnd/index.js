@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const {generateFile}= require('./generateFile');
+const { executeCpp } = require('./executeCpp');
 
  
 //MiddleWare  used decode data from url
@@ -28,11 +29,12 @@ app.post('/run',async (req,res)=> {
 
    // execute the code file 
 
+   const output = await executeCpp(filePath);
 
 
 
    //console.log(language+ " -> " + code);
-   res.json({language : language,code : code, filePath : filePath});
+   res.json({language : language,code : code, filePath : filePath, output : output});
 });
 
 
