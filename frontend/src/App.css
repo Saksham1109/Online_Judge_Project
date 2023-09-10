@@ -2,10 +2,10 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.nav-bar li {
+  text-align: left;
 }
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
