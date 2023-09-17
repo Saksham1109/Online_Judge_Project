@@ -2,50 +2,37 @@
   text-align: center;
 }
 
-.list {
+.nav-bar li {
+  float: left;
+  padding: 14px 16px;
   text-align: center;
-  padding: 10px;
-  enable-background: 0ch;
-}
-
-a {
   display: block;
-  padding: 8px;
-  background-color: #dddddd;
+  color: white;
+  
+
 }
 
-.nav-bar {
-  text-align: left;
-  padding: 0px;
-  align-content: center;
-  background-color: black;
-  text-emphasis-color: white;
+.nav-bar li:hover {
+  background-color: #111;
 }
 
-.introduction{
-  background-color: wheat;
-  display: block;
-  padding: 10px;
+.nav-bar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
 }
 
-.signInClass {
-  position: absolute;
-  right: 250px;
-  width: 100px;
-  border: 3px solid white;
-}
-
-.logoutClass {
-  position: absolute;
-  right: 100px;
-  width: 100px;
-  border: 3px solid white;
-}
-
-
-.signin {
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  background-color: #333;
+  color: white;
   text-align: center;
-  text-emphasis-color: black;
 }
 
 @media (prefers-reduced-motion: no-preference) {
