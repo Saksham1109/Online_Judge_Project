@@ -1,7 +1,10 @@
-const express = require('express');
-const app = express();
-const {generateFile}= require('./generateFile');
-const { executeCpp } = require('./executeCpp');
+const express = require('express')
+const app = express()
+const mongodb= require('./db')
+mongodb();
+const {generateFile}= require('./generateFile')
+const { executeCpp } = require('./executeCpp')
+
 
  
 //MiddleWare  used decode data from url
@@ -14,7 +17,7 @@ app.get("/",(req,res)=> {
 });
 
 // 2nd api
-app.post('/run',async (req,res)=> {
+app.post('/runCompilerForCplusplus',async (req,res)=> {
 //    const language=req.body.language;
 //    const code = req.body.code;
 
@@ -30,14 +33,11 @@ app.post('/run',async (req,res)=> {
    // execute the code file 
 
    const output = await executeCpp(filePath);
-
-
-
    //console.log(language+ " -> " + code);
    res.json({language : language,code : code, filePath : filePath, output : output});
 });
 
 
-app.listen(3000, () => {
-    console.log("The server is listening/setup on port 3000");
+app.listen(5000, () => {
+    console.log("The server is listening/setup on port 5000");
 }); 
