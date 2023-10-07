@@ -62,4 +62,30 @@
 
 .ListOfproblems {
   text-align: center;
+  display: flex;
+}
+
+.compilerScreen{
+  text-align: center;
+}
+.text-area{
+  box-shadow: 10px;
+  text-align: center;
+}
+.question-box{
+  display: flex;
+}
+
+.question-area, .text-area{
+  flex: 1;
+  padding: 20px;
+  border: 1px solid black;
+
+}
+
+.output {
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px;
+  text-align: left;
 }

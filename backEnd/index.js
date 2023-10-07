@@ -1,40 +1,34 @@
-const express = require('express')
-const app = express()
-const mongodb= require('./db')
-mongodb();
-const {generateFile}= require('./generateFile')
-const { executeCpp } = require('./executeCpp')
+const express = require('express');
+const app = express();
+const cors = require("cors");
+const { generateFile }= require('./generateFile');
+const { executeCpp } = require('./executeCpp');
 
 
  
 //MiddleWare  used decode data from url
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
+app.use(cors());
 
 // 1st api Home API
-app.get("/",(req,res)=> {
-    res.json({online : "Compiler",MadeBy :"Saksham"});
+app.get("/signature",(req,res)=> {
+    res.json({online : "Compiler",MadeBy :"Saksham Mishra"});
 });
 
 // 2nd api
-app.post('/runCompilerForCplusplus',async (req,res)=> {
-//    const language=req.body.language;
-//    const code = req.body.code;
+app.post('/run',async (req,res)=> {
 
-   const {language="cpp",code}= req.body;
-   if(code ==undefined)
+    const { language = "cpp", code } = req.body;
+   console.log(code);
+   console.log(language);
+   if(code ===undefined)
    {
-    return res.status(404).json({success : false, error :"The Code is empty, please enter your code!"})
+    return res.status(400).json({success : false, error :"The Code Body is empty, please enter your code!"})
    }
-   // create a codes folder , and save the code in the file 
-   // Generating file 
    const filePath = await generateFile(language,code);
-
-   // execute the code file 
-
    const output = await executeCpp(filePath);
-   //console.log(language+ " -> " + code);
-   res.json({language : language,code : code, filePath : filePath, output : output});
+   res.json({language : language,code : code, output : output});
 });
 
 
