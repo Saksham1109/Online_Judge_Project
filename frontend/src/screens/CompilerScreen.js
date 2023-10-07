@@ -13,7 +13,7 @@ function CompilerScreen() {
     const handleSubmitRun  = async()=> {
         
         const payload = {
-            language:"cpp",
+            language,
             code
         };
         try{
@@ -21,9 +21,17 @@ function CompilerScreen() {
             setOutput(data.output);
     
         }
-        catch(err)
+        catch({response})
         {
-            console.log(err.response);
+            if(response)
+            {
+                console.log(response);
+                setOutput(response.data.stderr);
+            }
+            else
+            {
+                setOutput("Compilation Issues, please check your code");
+            }
         }
         
     }
