@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const { generateFile }= require('./generateFile');
 const { executeCpp } = require('./executeCpp');
+const { executePy } = require('./executePy');
 
 
  
@@ -20,15 +21,29 @@ app.get("/signature",(req,res)=> {
 app.post('/run',async (req,res)=> {
 
     const { language = "cpp", code } = req.body;
-   console.log(code);
-   console.log(language);
-   if(code ===undefined)
+
+   if(code ===undefined || code==="")
    {
     return res.status(400).json({success : false, error :"The Code Body is empty, please enter your code!"})
    }
-   const filePath = await generateFile(language,code);
-   const output = await executeCpp(filePath);
-   res.json({language : language,code : code, output : output});
+   
+   try {
+
+        const filePath = await generateFile(language,code);
+        let output;
+
+    if(language==="cpp") {
+        output = await executeCpp(filePath);
+        }
+    else {
+        output = await executePy(filePath);
+        }
+        res.json({output : output});
+   }
+   catch(err)
+   {
+    res.status(500).json(err);
+   }
 });
 
 
