@@ -18,7 +18,10 @@ function CompilerScreen() {
         };
         try{
             const {data}=  await axios.post("http://localhost:5000/run",payload);
-            setOutput(data.output);
+            console.log(data);
+            console.log("The error is ");
+
+            setOutput(data.jobId);
     
         }
         catch({response})
