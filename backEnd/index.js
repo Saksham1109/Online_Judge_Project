@@ -1,11 +1,15 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
+const connection = require('./Db');
+
 const cors = require("cors");
 const { generateFile }= require('./generateFile');
 const { executeCpp } = require('./executeCpp');
 const { executePy } = require('./executePy');
+const Job = require('./Models/Job');
 
-
+connection();
  
 //MiddleWare  used decode data from url
 app.use(express.urlencoded({extended : true}));
@@ -26,22 +30,36 @@ app.post('/run',async (req,res)=> {
    {
     return res.status(400).json({success : false, error :"The Code Body is empty, please enter your code!"})
    }
-   
+
+   let job;
+   let output;
    try {
 
-        const filePath = await generateFile(language,code);
-        let output;
+        const filepath = await generateFile(language, code)
+        job = await new Job({language:language, filepath:filepath}).save();
+        const jobId= job["_id"];
 
-    if(language==="cpp") {
-        output = await executeCpp(filePath);
-        }
-    else {
-        output = await executePy(filePath);
-        }
-        res.json({output : output});
+        job["startedAt"]= new Date();
+        if(language==="cpp") {
+            output = await executeCpp(filePath);
+            }
+        else {
+            output = await executePy(filePath);
+            }
+
+        res.status(201).json({success:true,jobId});
+        job["completedAt"]= new Date();
+        job["status"]= "success";
+        job["output"]=output;
+
+        await job.save();
    }
    catch(err)
    {
+    job["completedAt"]= new Date();
+    job["status"]= "error";
+    job["output"] = JSON.stringify(output);
+    await job.save();
     res.status(500).json(err);
    }
 });
