@@ -28,8 +28,9 @@ function CompilerScreen() {
         {
             if(response)
             {
+                console.log("The Error is ")
                 console.log(response);
-                setOutput(response.data.stderr);
+                setOutput(response.output.message)
             }
             else
             {

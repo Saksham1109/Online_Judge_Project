@@ -41,18 +41,19 @@ app.post('/run',async (req,res)=> {
 
         job["startedAt"]= new Date();
         if(language==="cpp") {
-            output = await executeCpp(filePath);
+            output = executeCpp(filepath);
             }
         else {
-            output = await executePy(filePath);
+            output = executePy(filepath);
             }
 
-        res.status(201).json({success:true,jobId});
+        
         job["completedAt"]= new Date();
         job["status"]= "success";
         job["output"]=output;
 
-        await job.save();
+        job.save();
+        res.status(201).json({success:true,jobId});
    }
    catch(err)
    {
