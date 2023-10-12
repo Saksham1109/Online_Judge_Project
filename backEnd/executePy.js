@@ -4,11 +4,6 @@ const path = require("path");
 
 
 const executePy = (filepath) => {
-    // const jobId = path.basename(filepath).split(".")[0];
-    // console.log(jobId);
-    // console.log("==================================");
-    // const outPath = path.join(outputPath, `${jobId}.exe`);
-    // console.log(outPath);
 
     return new Promise((resolve, reject) => {
         exec(

@@ -2,13 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const connection = require('./Db');
-
 const cors = require("cors");
 const { generateFile }= require('./generateFile');
 const { executeCpp } = require('./executeCpp');
 const { executePy } = require('./executePy');
 const Job = require('./Models/Job');
-
 connection();
  
 //MiddleWare  used decode data from url
@@ -16,12 +14,34 @@ app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 app.use(cors());
 
-// 1st api Home API
-app.get("/signature",(req,res)=> {
-    res.json({online : "Compiler",MadeBy :"Saksham Mishra"});
-});
+app.get("/status", async(req,res)=>{
 
-// 2nd api
+    const jobId= req.query.id;
+
+    if(jobId== undefined)
+    {
+        return res.status(400).json({success:false,error:"jobId is not present"}); 
+    }
+
+    try{
+        const job = await Job.findById(jobId);
+        if(job === undefined)
+        {
+            return res.status(404).json({success:false , error:"Invalid JobId"});
+        }
+
+        return res.status(200).json({  success:true , job});
+        
+
+    }
+    catch (err)
+    {
+        console.log(err);
+        return res.status(500).json({success:false, error: err});
+    }
+
+})
+
 app.post('/run',async (req,res)=> {
 
     const { language = "cpp", code } = req.body;
@@ -41,19 +61,19 @@ app.post('/run',async (req,res)=> {
 
         job["startedAt"]= new Date();
         if(language==="cpp") {
-            output = executeCpp(filepath);
+            output = await executeCpp(filepath);
             }
         else {
-            output = executePy(filepath);
+            output = await executePy(filepath);
             }
 
         
         job["completedAt"]= new Date();
         job["status"]= "success";
-        job["output"]=output;
+        job["output"]=JSON.stringify(output);
 
         job.save();
-        res.status(201).json({success:true,jobId});
+        return res.status(201).json({success:true,jobId});
    }
    catch(err)
    {
@@ -61,7 +81,7 @@ app.post('/run',async (req,res)=> {
     job["status"]= "error";
     job["output"] = JSON.stringify(output);
     await job.save();
-    res.status(500).json(err);
+    return res.status(500).json(err);
    }
 });
 

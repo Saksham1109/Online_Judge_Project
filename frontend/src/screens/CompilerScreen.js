@@ -8,6 +8,7 @@ function CompilerScreen() {
     const[code,setCode] = useState('');
     const[language,setLanguage] = useState('cpp');
     const[output,setOutput] = useState('');
+    const[outputStatus,setOutputStatus]=useState('');
 
     
     const handleSubmitRun  = async()=> {
@@ -18,23 +19,54 @@ function CompilerScreen() {
         };
         try{
             const {data}=  await axios.post("http://localhost:5000/run",payload);
+            console.log("The data is");
             console.log(data);
-            console.log("The error is ");
+            let intervalId;
+            let int=0;
 
-            setOutput(data.jobId);
-    
+            intervalId=setInterval(async()=>{
+                const {data : dataRes} = await axios.get("http://localhost:5000/status",{params:{id:data.jobId}});
+                const{success, job, error} = dataRes;
+                console.log(dataRes);
+                if(success)
+                {
+                    const {status:jobStatus, output:jobOutput} = job;
+                    console.log(job);
+                    if(jobStatus==="pending") return;
+                    setOutput(jobOutput);
+                    setOutputStatus("Success");
+                    clearInterval(intervalId);
+                    int++;
+                }
+                else
+                {
+                    console.log(error);
+                    clearInterval(intervalId);
+                    setOutput(error.stderr);
+                    setOutputStatus("Error");
+                }
+                if(int==5)
+                {
+                    clearInterval(intervalId);
+                }
+
+            },1000);
+            
+
         }
         catch({response})
         {
             if(response)
             {
-                console.log("The Error is ")
-                console.log(response);
-                setOutput(response.output.message)
+                console.log("the error is ");
+                console.log(response.data);
+                setOutput(response.data.stderr);
+                setOutputStatus("Error");
             }
             else
             {
                 setOutput("Compilation Issues, please check your code");
+                setOutputStatus("Error");
             }
         }
         
@@ -71,6 +103,8 @@ function CompilerScreen() {
         <br></br>
         <button onClick={handleSubmitRun}>Run</button>
         <button onClick={handleSubmit}>Submit</button>
+        <br></br>
+        Output:: {outputStatus}
         <div className='output'>
             {output}
         </div>
