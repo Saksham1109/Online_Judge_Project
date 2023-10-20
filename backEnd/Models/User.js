@@ -30,4 +30,14 @@ const validate = (data) => {
   return schema.validate(data);
 };
 
-module.exports = { User, validate };
+const validateCredentials = (data) => {
+  const schema = Joi.object(
+      {
+        email: Joi.string().required().label("Email"),
+        password: Joi.string().required().label("Password")
+      }
+  );
+  return schema.validate(data);
+}
+
+module.exports = { User, validate , validateCredentials };

@@ -9,7 +9,7 @@ const { generateFile }= require('./generateFile');
 const { executeCpp } = require('./executeCpp');
 const { executePy } = require('./executePy');
 const Job = require('./Models/Job');
-const {user, validate, User} = require("./Models/User");
+const {user, validate, validateCredentials,User} = require("./Models/User");
 const Joi = require("joi");
 connection();
  
@@ -18,15 +18,7 @@ app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 app.use(cors());
 
-const validateCredentials = (data) => {
-    const schema = Joi.object(
-        {
-            email : Joi.string.email().required().label("Email"),
-            password : Joi.string.required().label("Password")
-        }
-    );
-    return schema.validate(data);
-}
+
 
 app.post("/register",async(req,res)=>{
 
@@ -63,18 +55,21 @@ app.post("/register",async(req,res)=>{
 
 app.post("/signin", async(req,res)=>{
     try{
+        const { email, password } = req.body;
+        
         const{error} = validateCredentials(req.body);
         if(error)
         {
-            return res.status(400).send({message : error.details[0].message});
+            return res.status(400).send({message:error.details[0].message});
         }
-        const user = await User.findOne({email : req.body.email});
+        console.log("after validation");
+        const user = await User.findOne({email : email});
         if(!user)
         {
-            return res.status(401).send({message : "Invalid Email , please sign in if new "});
+            return res.status(401).send({message : "Invalid Email/email not found , please sign in if new "});
         }
 
-        const validPassword = await bcrypt.compare(req.body.password,user.password)
+        const validPassword = await bcrypt.compare(password,user.password)
 
         if(!validPassword)
         {
@@ -82,12 +77,14 @@ app.post("/signin", async(req,res)=>{
         }
 
         const token = await user.generateAuthToken();
-        res.status(200).send({data : token , message : "Logged in successfully!"});
+        res.status(200).send({toeken : token , message : "Logged in successfully!"});
+        console.log('success');
 
 
     }
     catch (error){
-        return res.status(500).send({message : "Request Processing failed"});
+
+        return res.status(500).send({message : "Request Processing failed", error :error});
 
     }
 })

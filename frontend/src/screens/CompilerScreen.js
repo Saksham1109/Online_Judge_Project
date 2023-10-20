@@ -45,7 +45,7 @@ function CompilerScreen() {
                     setOutput(error.stderr);
                     setOutputStatus("Error");
                 }
-                if(int==5)
+                if(int==10)
                 {
                     clearInterval(intervalId);
                 }

@@ -9,11 +9,10 @@ export default function HomeScreen() {
       <NavigationBar></NavigationBar>
         <div className="introduction">
             Hello!, <br/>
-            If you have not registered, please register on top of the page, <br></br>
+            If you have not registered, please please <Link to="/register">Register here</Link>., <br></br>
             if already registered, please <Link to="/signin">sign in</Link>.
             </div>
             <ListOfOProblems/>
-
     </div>
   )
 }
