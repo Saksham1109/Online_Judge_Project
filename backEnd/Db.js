@@ -7,7 +7,7 @@ const connect = () => {
   };
 
   try {
-    mongoose.connect("mongodb+srv://sakshammishra:SakshamMongo123@cluster0.1oo9f5k.mongodb.net/?retryWrites=true&w=majority", connectionParams);
+    mongoose.connect(process.env.DB, connectionParams);
     console.log("connected to database successfully");
   } catch (error) {
     console.log(error);

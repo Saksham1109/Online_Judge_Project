@@ -1,5 +1,7 @@
+require("dotenv").config();
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const app = express();
 const connection = require('./Db');
 const cors = require("cors");
@@ -7,6 +9,8 @@ const { generateFile }= require('./generateFile');
 const { executeCpp } = require('./executeCpp');
 const { executePy } = require('./executePy');
 const Job = require('./Models/Job');
+const {user, validate, User} = require("./Models/User");
+const Joi = require("joi");
 connection();
  
 //MiddleWare  used decode data from url
@@ -14,25 +18,93 @@ app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 app.use(cors());
 
+const validateCredentials = (data) => {
+    const schema = Joi.object(
+        {
+            email : Joi.string.email().required().label("Email"),
+            password : Joi.string.required().label("Password")
+        }
+    );
+    return schema.validate(data);
+}
+
+app.post("/register",async(req,res)=>{
+
+    try{
+        const {error} = validate(req.body);
+    if(error)
+    {
+        return res.status(400).send({message:error.details[0].message});
+
+    }
+
+    const user = await User.findOne({email : req.body.email});
+    if(user)
+    {
+        return res.status(409).send({message : "User with given email id already exists"});
+    }
+
+    const salt=await bcrypt.genSalt(Number(process.env.SALT));
+    const hashPassword = await bcrypt.hash(req.body.password,salt);
+
+    await new User({...req.body,password:hashPassword}).save();
+    res.status(201).send({message : "User Created Successfulle, please proceed to sign in"});
+
+    }
+    catch(err)
+    {
+
+        return res.status(500).send({message : "Request Processing failed", error : err});
+
+    }
+
+})
+
+
+app.post("/signin", async(req,res)=>{
+    try{
+        const{error} = validateCredentials(req.body);
+        if(error)
+        {
+            return res.status(400).send({message : error.details[0].message});
+        }
+        const user = await User.findOne({email : req.body.email});
+        if(!user)
+        {
+            return res.status(401).send({message : "Invalid Email , please sign in if new "});
+        }
+
+        const validPassword = await bcrypt.compare(req.body.password,user.password)
+
+        if(!validPassword)
+        {
+            return res.status(401).send({message : "Invalid user Id or password"});
+        }
+
+        const token = await user.generateAuthToken();
+        res.status(200).send({data : token , message : "Logged in successfully!"});
+
+
+    }
+    catch (error){
+        return res.status(500).send({message : "Request Processing failed"});
+
+    }
+})
+
 app.get("/status", async(req,res)=>{
-
     const jobId= req.query.id;
-
     if(jobId== undefined)
     {
         return res.status(400).json({success:false,error:"jobId is not present"}); 
     }
-
     try{
         const job = await Job.findById(jobId);
         if(job === undefined)
         {
             return res.status(404).json({success:false , error:"Invalid JobId"});
         }
-
         return res.status(200).json({  success:true , job});
-        
-
     }
     catch (err)
     {
