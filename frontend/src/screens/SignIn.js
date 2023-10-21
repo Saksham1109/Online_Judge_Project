@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React,{useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
     const[email,setEmail] = useState('');
     const[password,setPassword] = useState('');
     const[output,setOutput] = useState('');
 
+    const navigate = useNavigate();
         const handleSignIn =async() => 
         {
             console.log(email)
@@ -19,6 +21,7 @@ function SignIn() {
                 console.log("post api end");
                 console.log(data);   
                 setOutput(data.message);
+                navigate('/');
             }
             catch ({response})
             {

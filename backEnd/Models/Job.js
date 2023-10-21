@@ -13,9 +13,6 @@ const JobSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    startedAt: {
-        type: Date
-    },
     completedAt: {
         type: Date
     },
