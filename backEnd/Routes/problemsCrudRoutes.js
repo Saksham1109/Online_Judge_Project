@@ -6,7 +6,7 @@ const {
   getProblem,
   updateProblem,
   deleteProblem,
-} = require("../controller/problemController");
+} = require("../Controller/problemCrudController");
 const auth = require("../MiddleWare/authMiddleware");
 
 const router = express.Router();

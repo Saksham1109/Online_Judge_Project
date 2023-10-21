@@ -20,7 +20,7 @@ app.use(cors());
 app.use("/", loginRegisterRoutes);
 app.use("/",problemsCrudRoutes);
 app.use("/", runOrSubmitCodeRoutes);
-app.use("/", rankingRoutes);
+// app.use("/", rankingRoutes);
 
 
 app.listen(5000, () => {
