@@ -36,7 +36,7 @@ const runProblem = async (req,res)=> {
         job["output"]=JSON.stringify(output);
 
         job.save();
-        return res.status(201).json({success:true,jobId});
+        return res.status(201).json({success:true,output:output});
    }
    catch(err)
    {
