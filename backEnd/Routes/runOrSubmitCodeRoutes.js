@@ -5,7 +5,7 @@ const auth = require("../MiddleWare/authMiddleware");
 
 const router = express.Router();
  
-router.post("/problem/run", auth, runProblem);
-router.post("/problem/submit", auth, submitProblem);
+// router.post("/compiler/run", auth, runProblem);
+router.post("/compiler/submit", auth, submitProblem);
 
 module.exports = router;

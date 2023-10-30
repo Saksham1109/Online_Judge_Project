@@ -34,8 +34,7 @@ const problemSchema = new mongoose.Schema(
     },
     testCases: [testCaseSchema],
     createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type:String,
       required: true,
     },
   },

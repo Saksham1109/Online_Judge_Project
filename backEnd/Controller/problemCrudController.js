@@ -1,22 +1,27 @@
-const problem = require("../Models/Problems");
+const problemdb = require("../Models/Problems");
 // Add the  problem 
 const addProblem = async (req, res) => {
-  const { title, statement, testCases } = req.body;
-  const createdBy = req.user._id;
+  const { title,tag,description,difficulty,testCases } = req.body;
+  const createdBy=req.headers.email;
+  console.log(req.headers);
 
   try {
-    const problem = await problem.findOne({ title });
+    const problem = await problemdb.findOne({ title });
 
+    console.log("1");
     if (problem) {
       res.json({ message: "Problem exists already" });
     } else {
-      const problem = await problem.create({
+      console.log("2");
+      const problem = await problemdb.create({
         title,
-        statement,
+        tag,
+        description,
         difficulty,
         testCases,
-        createdBy,
+        createdBy
       });
+      console.log(problem);
       res.json({ message: "Problem created successfully" });
     }
   } catch (error) {
@@ -26,17 +31,19 @@ const addProblem = async (req, res) => {
 
 const getAllProblems = async (req, res) => {
   try {
-    const problems = await problem.find();
+    const problems = await problemdb.find();
     res.json({ data: problems });
   } catch (error) {
     res.status(500).json(error);
   }
 };
 
+
+// get specific problem  based on problemID
 const getProblem = async (req, res) => {
   console.log(req.body);
   try {
-    const problem = await problem.findById(req.params.problemId);
+    const problem = await problemdb.findById(req.params.problemId);
 
     if (!problem) {
       return res.status(404).json({ message: "Problem not found" });
@@ -47,14 +54,12 @@ const getProblem = async (req, res) => {
   }
 };
 
+
+// Update the problem 
 const updateProblem = async (req, res) => {
-  const { title, statement, difficulty, testCases } = req.body;
+  const { title, tag , description, difficulty, testCases } = req.body;
   try {
-    const problem = await problem.findByIdAndUpdate(
-      req.params.problemId,
-      { title, statement, difficulty, testCases },
-      { new: true }
-    );
+    const problem = await problemdb.findByIdAndUpdate(req.params.problemId,{ title, tag, description, difficulty,testCases },{ new: true });
     if (!problem) {
       return res.status(404).json({ message: "Problem not found" });
     }
@@ -66,7 +71,7 @@ const updateProblem = async (req, res) => {
 
 // delete problem
 const deleteProblem = async (req, res) => {
-  const problem = await problem.findByIdAndDelete(req.params.problemId);
+  const problem = await problemdb.findByIdAndDelete(req.params.problemId);
   try {
     if (!problem) {
       return res.status(404).json({ message: "Problem not found" });
