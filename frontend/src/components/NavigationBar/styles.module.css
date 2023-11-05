@@ -1,0 +1,65 @@
+.navbar {
+	background-color: #333;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	padding: 10px;
+  }
+  
+  .navbrand {
+	font-size: 24px;
+	margin-right: auto;
+    color: #fff;
+  }
+  
+  .navlist {
+	list-style-type: none;
+	display: flex;
+	margin: 0;
+	padding: 0;
+	margin-right: 20px;
+  }
+  
+  .navitem {
+	margin-right: 20px;
+  }
+  
+  .navitem a {
+	text-decoration: none;
+	color: #fff;
+  }
+  
+  .dropdown {
+	position: relative;
+  }
+  
+  .dropdownToggle {
+	background: none;
+	border: none;
+	color: #fff;
+	cursor: pointer;
+  }
+  
+  .dropdownMenu {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	background: #333;
+	border: 1px solid #555;
+	border-radius: 4px;
+	display: flex;
+	flex-direction: column;
+	min-width: 150px;
+	margin-top: 5px;
+  }
+  
+  .dropdownItem {
+	padding: 10px;
+  }
+  
+  .dropdownItem a {
+	color: #fff;
+	text-decoration: none;
+  }
+
+  

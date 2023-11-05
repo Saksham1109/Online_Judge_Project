@@ -1,24 +1,25 @@
 
 import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import HomeScreen from './screens/HomeScreen';
-import SignIn from './screens/SignIn';
-import CompilerScreen from './screens/CompilerScreen';
-import Register from './screens/Register';
+import {  Route, Routes, Navigate } from 'react-router-dom';
+
+import Main from './components/Main';
+import Signup from './components/Signup';
+import Login from './components/Login';
 
 function App() {
+
+  const user = localStorage.getItem("token");
+  console.log("the user is ");
+
   return (
-    <BrowserRouter>
-      <div>
-          <Routes>
-            <Route exact path='/' element={<HomeScreen/>}></Route>
-            <Route exact path='/signin' element={<SignIn/>}></Route>
-            <Route exact path='/compilerScreen' element={<CompilerScreen/>}></Route>
-            <Route exact path='/register' element={<Register/>}></Route>
-          </Routes>
-      </div>    
-    </BrowserRouter>
+      <Routes>
+        {user && <Route exact path='/' element={<Main/>}></Route>}
+        <Route exact path='/login' element={<Login/>}></Route>
+        <Route exact path='/signup' element={<Signup/>}></Route>
+        <Route exact path="/" element={<Navigate replace to="/login" />}></Route>
+      </Routes>
   );
 }
 
 export default App;
+ 
