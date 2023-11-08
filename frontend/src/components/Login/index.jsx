@@ -1,9 +1,13 @@
-import { useState } from "react";
-import axios from "axios";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
+import AuthContext from '../../context/authProvider';
+import axios from "../../api/axios";
+
+const LOGIN_URL='/user/login';
 
 const Login = () => {
+	const {setAuth} = useContext(AuthContext);
 	const [data, setData] = useState({ email: "", password: "" });
 	const [error, setError] = useState("");
 
@@ -14,8 +18,13 @@ const Login = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const url = "http://localhost:5000/user/login";
-			const { data: res } = await axios.post(url, data);
+			const { data: res } = await axios.post(LOGIN_URL, data,
+				{
+					headers:{'Content-Type':'application/json'},
+					withCredentials:true
+				});
+				const token =data?.token;
+				setAuth({token});
 			localStorage.setItem("token", res.data);
 			window.location = "/";
 		} catch (error) {
@@ -25,6 +34,10 @@ const Login = () => {
 				error.response.status <= 500
 			) {
 				setError(error.response.data.message);
+			}
+			else
+			{
+				setError('No server Response');
 			}
 		}
 	};

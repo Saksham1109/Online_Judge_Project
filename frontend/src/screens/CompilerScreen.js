@@ -109,10 +109,7 @@ function CompilerScreen() {
             {output}
         </div>
         </div>
-
        </div>
-        
-        
         </div>
   )
 }
