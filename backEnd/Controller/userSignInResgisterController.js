@@ -25,7 +25,7 @@ const login = async(req,res)=>{
         }
 
         const token = await user.generateAuthToken();
-        res.status(200).send({token : token , message : "Logged in successfully!"});
+        res.status(200).send({token : token , message : "Logged in successfully!",userId :email});
         console.log('success');
 
 

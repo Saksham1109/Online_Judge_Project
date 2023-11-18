@@ -43,7 +43,8 @@ const getAllProblems = async (req, res) => {
 const getProblem = async (req, res) => {
   console.log(req.body);
   try {
-    const problem = await problemdb.findById(req.params.problemId);
+    var query ={title:new RegExp(req.params.title,'i')}
+    const problem = await problemdb.find(query);
 
     if (!problem) {
       return res.status(404).json({ message: "Problem not found" });

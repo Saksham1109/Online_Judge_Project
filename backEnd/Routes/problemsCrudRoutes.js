@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/problems/add", auth, addProblem);
 router.get("/problems/list", auth, getAllProblems);
-router.get("/problems/:problemId", auth, getProblem);
+router.get("/problems/findBy/:title", auth, getProblem);
 router.put("/problems/edit/:problemId", auth, updateProblem);
 router.delete("/problems/delete/:problemId", auth, deleteProblem);
 

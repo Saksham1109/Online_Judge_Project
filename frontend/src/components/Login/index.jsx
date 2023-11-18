@@ -1,13 +1,14 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import styles from "./styles.module.css";
-import AuthContext from '../../context/authProvider';
 import axios from "../../api/axios";
+ import styles from './styles.module.css';
+ import {useAuth} from '..//../context/AuthProvider';
+
 
 const LOGIN_URL='/user/login';
 
 const Login = () => {
-	const {setAuth} = useContext(AuthContext);
+	const {login} = useAuth();
 	const [data, setData] = useState({ email: "", password: "" });
 	const [error, setError] = useState("");
 
@@ -21,12 +22,16 @@ const Login = () => {
 			const { data: res } = await axios.post(LOGIN_URL, data,
 				{
 					headers:{'Content-Type':'application/json'},
-					withCredentials:true
+					// withCredentials:true
 				});
-				const token =data?.token;
-				setAuth({token});
-			localStorage.setItem("token", res.data);
-			window.location = "/";
+				const token =res?.token;
+				console.log(1);
+				login(res.token,res.userId);
+				console.log(2);
+				
+				sessionStorage.setItem("token", token);
+				window.location = "/";
+				
 		} catch (error) {
 			if (
 				error.response &&

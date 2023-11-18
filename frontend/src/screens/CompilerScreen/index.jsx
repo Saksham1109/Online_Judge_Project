@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
-import NavigationBar from '../components/NavigationBar'
-import axios from 'axios';
+import axios from '../../api/axios';
+import styles from './styles.module.css';
 
 
 function CompilerScreen() {
@@ -82,7 +82,6 @@ function CompilerScreen() {
 
   return (
     <div className='compilerScreen'>
-        <NavigationBar></NavigationBar>
         <h1>Online Code Compiler</h1>
        <div className='question-box'>
        <div className='question-area'>

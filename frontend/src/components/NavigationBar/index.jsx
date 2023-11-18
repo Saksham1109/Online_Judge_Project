@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
-import { Link } from 'react-router-dom';
+import { Link,Navigate } from 'react-router-dom';
 
 
 const NavigationBar = () => {
@@ -10,7 +10,7 @@ const NavigationBar = () => {
       setDropdownOpen(!dropdownOpen);
     };
     const handleLogout = () => {
-      localStorage.removeItem("token");
+      sessionStorage.clear();
       window.location.reload();
   };
   
