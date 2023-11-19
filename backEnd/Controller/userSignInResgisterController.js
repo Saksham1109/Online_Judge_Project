@@ -25,7 +25,7 @@ const login = async(req,res)=>{
         }
 
         const token = await user.generateAuthToken();
-        res.status(200).send({token : token , message : "Logged in successfully!"});
+        res.status(200).send({token : token , message : "Logged in successfully!",userId :email});
         console.log('success');
 
 
@@ -68,5 +68,33 @@ const register = async(req,res)=>{
 
 };
 
+const updateRole = async(req,res)=>{
+    try{
+        const { email, toRole } = req.body;
+        const filter = { email: email };
+        const update = { role: toRole };
+        console.log("after validation");
+        const user = await User.findOneAndUpdate(filter,update);
+        res.status(200).send({message : "Role Updated Successfully",userId :email});
+        console.log('success');
+    }
+    catch (error){
+        return res.status(500).send({message : "Request Processing failed", error :JSON.stringify(error)});
+    }
+};
 
-module.exports = { login, register };
+
+const getUser = async(req,res)=>{
+    try{
+        const { email,  } = req.body;
+        const user = await User.findOne({email : email});
+        res.status(200).send({message : "user Found",userId :email, role:user.role});
+    }
+    catch (error){
+        return res.status(500).send({message : "Request Processing failed", error :JSON.stringify(error)});
+    }
+};
+
+
+
+module.exports = { login, register,updateRole ,getUser};

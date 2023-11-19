@@ -1,58 +1,138 @@
-const { generateFile }= require('../generateFile');
-const { executeCpp } = require('../executeCpp');
-const { executePy } = require('../executePy');
-const Job = require('../Models/Job');
+const problemDb = require("../Models/Problems");
+const { exec } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+const { User } = require("../Models/User");
+const Submissions = require("../Models/Submissions");
+const { v4: uuid } = require("uuid");
 
+const outputDirectory = path.join(__dirname, "../outputs");
+const codeDirectory = path.join(__dirname, "../codes");
+const inputDirectory = path.join(__dirname, "../inputs");
 
+if (!fs.existsSync(outputDirectory)) {
+  fs.mkdirSync(outputDirectory, { recursive: true });
+}
 
-const runProblem = async (req,res)=> {
+if (!fs.existsSync(codeDirectory)) {
+  fs.mkdirSync(codeDirectory, { recursive: true });
+}
 
-    const { language = "cpp", code } = req.body;
+if (!fs.existsSync(inputDirectory)) {
+  fs.mkdirSync(inputDirectory, { recursive: true });
+}
 
-   if(code ===undefined || code==="")
-   {
-    return res.status(400).json({success : false, error :"The Code Body is empty, please enter your code!"})
-   }
+async function generateFile(format, code) {
+  const jobId = uuid();
+  // only one uuid created for better mapping
+  const fileName = format === "java" ? "Main.java" : `${jobId}.${format}`;
+  const filepath = path.join(codeDirectory, fileName);
+  await fs.writeFileSync(filepath, code);
+  return filepath;
+}
 
-   let job;
-   let output;
-   try {
+async function generateInput(input, filePath) {
+  const jobId = path.basename(filePath).split(".")[0];
+  const fileName = `${jobId}.txt`;
+  const inputFilepath = path.join(inputDirectory, fileName);
+  await fs.writeFileSync(inputFilepath, input);
+  console.log(inputFilepath);
+  return inputFilepath;
+}
 
-        const filepath = await generateFile(language, code)
-        job = await new Job({language:language, filepath:filepath}).save();
-        const jobId= job["_id"];
+const executeCode = (filePath, language, inputPath) => {
+  const jobId = path.basename(filePath).split(".")[0];
+  let outputPath;
+  if (language == "java") {
+    outputPath = path.join(outputDirectory, `${jobId}.class`);
+  } else {
+    outputPath = path.join(outputDirectory, `${jobId}.exe`);
+  }
 
-        job["startedAt"]= new Date();
-        if(language==="cpp") {
-            output = await executeCpp(filepath);
-            }
-        else {
-            output = await executePy(filepath);
-            }
+  let executeCmd;
 
-        
-        job["completedAt"]= new Date();
-        job["status"]= "success";
-        job["output"]=JSON.stringify(output);
+  switch (language) {
+    case "java": 
+      executeCmd=`javac -d ${outputDirectory} ${filePath} && java -cp ${outputDirectory} ${jobId} < ${inputPath}`;
+      break;
+    case "py":
+      executeCmd = ` python ${filePath} < ${inputPath}`
+      break;
+    case "cpp":
+      executeCmd = `g++ ${filePath} -o ${outputPath} && cd ${outputDirectory} && .\\${jobId}.exe  < ${inputPath}`
+      break;
+    default:
+      return Promise.reject(`Language is not supported: ${language}`);
+  }
 
-        job.save();
-        return res.status(201).json({success:true,output:output});
-   }
-   catch(err)
-   {
-    job["completedAt"]= new Date();
-    job["status"]= "error";
-    job["output"] = JSON.stringify(output);
-    await job.save();
-    return res.status(500).json(err);
-   }
+  return new Promise((resolve, reject) => {
+    exec(executeCmd, (error, stdout, stderr) => {
+      if (error) {
+        reject({ error, stderr });
+      } else {
+        resolve(stdout);
+      }
+    });
+  });
 };
 
+const submitProblem = async (req, res) => {
+  const { language, code, problemId,email } = req.body;
+  console.log(email);
 
-const submitProblem = async(req,res) => {
-    console.log("submit");
-    
+  if (code === undefined) {
+    return res.json({ success: false, message: "Code not found" });
+  }
+
+  let  submissionStatus, errorInfo;
+
+  try {
+    const problem = await problemDb.findById(problemId);
+    const testCases = problem.testCases;
+
+    const user = await User.findOne({email : email});
+
+    const filepath = await generateFile(language, code);
+
+    for (let i = 0; i < testCases.length; i++) {
+      const testCase = testCases[i];
+      const inputPath = await generateInput(testCase.input,filepath);
+      const rawOutput = await executeCode(filepath, language, inputPath);
+      console.log("--------------------------");
+      console.log(inputPath);
+
+      const output = rawOutput.replace(/\r\n/g, "\n").trim();
+      console.log('the output is   '+ output);
+
+      if (output !== testCase.output) {
+        submissionStatus = `Test cases ${i + 1} failed`;
+        return res.json({
+          message: `Test cases ${i + 1} failed`, status :false,
+        });
+      }
+    }
+
+    submissionStatus = "Code Accepted";
+    const submitProblem = await Submissions.create(
+      {
+        problemId,
+        email,
+        submissionStatus
+      }
+    )
+
+    console.log(submitProblem);
+    return res.json({ message: "Code Accepted",status:true });
+
+  } catch (error) {
+     console.log(error);
+    errorInfo = {
+      message: error.message || "Compilation error",
+      stack: error.stack || "",
+    };
+
+    return res.json({ message: errorInfo.message, error });
+  }
 };
 
-
-module.exports = { runProblem , submitProblem };
+module.exports = { submitProblem };

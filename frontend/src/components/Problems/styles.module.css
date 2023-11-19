@@ -1,0 +1,23 @@
+.problem_table,tr,th,td{
+  margin-top: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  align-items: center;
+  border: 2px solid;
+  width: 50%;
+  border-radius: 5px;
+
+}
+
+.searchBar{
+  margin-left: 40%;
+  margin-right: auto;
+}
+
+.problemContainer{
+  margin-left:auto;
+  margin-right: auto;
+  margin-top: 5px;
+}
+

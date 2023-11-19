@@ -1,22 +1,78 @@
-
 import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import HomeScreen from './screens/HomeScreen';
-import SignIn from './screens/SignIn';
+import { AuthProvider } from './context/AuthProvider';
+import {  Route, Routes, Navigate,BrowserRouter } from 'react-router-dom';
+
+import IntroScreen from './screens/IntroScreen';
+import Signup from './components/Signup';
+import Login from './components/Login';
+import NavigationBar from './components/NavigationBar';
+import PrivateRoutes from './PrivateRoutes';
 import CompilerScreen from './screens/CompilerScreen';
-import Register from './screens/Register';
+import Problem from './components/Problems';
+
 
 function App() {
   return (
     <BrowserRouter>
-      <div>
-          <Routes>
-            <Route exact path='/' element={<HomeScreen/>}></Route>
-            <Route exact path='/signin' element={<SignIn/>}></Route>
-            <Route exact path='/compilerScreen' element={<CompilerScreen/>}></Route>
-            <Route exact path='/register' element={<Register/>}></Route>
-          </Routes>
-      </div>    
+      <AuthProvider>
+        <NavigationBar/>
+        <Routes>
+          
+          <Route exact path='/login' element={<Login/>}></Route>
+          <Route exact path='/signup' element={<Signup/>}></Route>
+          <Route path='/' element={<PrivateRoutes><IntroScreen/></PrivateRoutes>}></Route>
+          <Route path='/compilerScreen' element={<PrivateRoutes><CompilerScreen/></PrivateRoutes>}></Route>
+          <Route path='/problems' element={<PrivateRoutes><Problem/></PrivateRoutes>}></Route>
+          {/* <Route
+            path="/problems/add"
+            element={
+              <PrivateRoutes>
+                <AddProblem />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/problems/list"
+            element={
+              <PrivateRoutes>
+                <ProblemList />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/problems/:problemId"
+            element={
+              <PrivateRoutes>
+                <ProblemDetails />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/problems/edit/:problemId"
+            element={
+              <PrivateRoutes>
+                <ProblemEdit />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/submissions/history"
+            element={
+              <PrivateRoutes>
+                <ProblemSubmissions />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/submissions/leaderBoard"
+            element={
+              <PrivateRoutes>
+                <LeaderBoard />
+              </PrivateRoutes>
+            }
+          /> */}
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  role: {type:String, enum:["admin","user"], required:false}
+  role: {type:String, enum:["admin","user"], required:false, default:"user"}
 });
 
 userSchema.methods.generateAuthToken = function () {
@@ -18,7 +18,6 @@ userSchema.methods.generateAuthToken = function () {
   return token;
 };
 
-const User = mongoose.model("user", userSchema);
 
 const validate = (data) => {
   const schema = Joi.object({
@@ -40,5 +39,7 @@ const validateCredentials = (data) => {
   );
   return schema.validate(data);
 }
+
+const User = mongoose.model("Users", userSchema);
 
 module.exports = { User, validate , validateCredentials };
