@@ -12,7 +12,10 @@ function MainScreen() {
   if(token)
 {
   return(
-    Problem(token)
+    <div>
+    {Problem(token)}
+    </div>
+    
   )
 }
 else{
@@ -20,7 +23,7 @@ else{
   return (
     <div>
       <div className={styles.intro}>
-      Hi!, If you are not logged in Please <Link to='/problems'>signIn/register</Link> here!
+      Hi!, If you are not logged in Please <Link to='/login'>signIn/register</Link> here!
       </div>
     </div>
   )

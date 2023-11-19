@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import styles from './styles.module.css';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -11,6 +12,7 @@ const Problem = (token) => {
   const [problems, setProblems] = useState([]);
   const [selectedProblem, setSelectedProblem] = useState(null);
 
+  const Navigate=useNavigate();
   useEffect(() => {
     fetchProblems();
   }, []);
@@ -49,17 +51,8 @@ const Problem = (token) => {
     }
   };
 
-  const handleViewProblem = (problem) => {
-    setSelectedProblem(problem);
-  };
-
-  const handleAttemptProblem = (problemId) => {
-    // You can implement the routing logic to the compiler screen here
-    // e.g., using react-router-dom
-    // history.push(`/compiler/${problemId}`);
-  };
-
   const renderProblemList = () => {
+    console.log(problems);
     return (
       <div className={styles.problem_table}>
           <table>
@@ -67,15 +60,15 @@ const Problem = (token) => {
                   <th>Title</th>
                   <th>Tag</th>
                   <th>Status</th>
-                  <th>View/Attempt</th>
+                  <th>Attempt</th>
               </tr>
               {problems.map((problem) => {
                   return (
-                      <tr key={problem.id}>
+                      <tr key={problem._id}>
                           <td>{problem.title}</td>
                           <td>{problem.tag}</td>
                           <td>{problem.status}</td>
-                          <td><button onClick={() => handleAttemptProblem(problem.id)}>Attempt</button> </td>
+                          <td><button onClick={() => {Navigate('/compilerScreen', {state: {problemId: problem._id}})}}>Attempt</button> </td>
                       </tr>
                   )
               })}
@@ -95,11 +88,11 @@ const Problem = (token) => {
               </tr>
               {problems.map((problem) => {
                   return (
-                      <tr key={problem.id}>
+                      <tr key={problem._id}>
                           <td>{problem.title}</td>
                           <td>{problem.tag}</td>
                           <td>{problem.status}</td>
-                          <td><button onClick={() => handleAttemptProblem(problem.id)}>Attempt</button> </td>
+                          <td><button onClick={() => {Navigate('/compilerScreen', {state: {problemId: problem._id}})}}>Attempt</button> </td>
                       </tr>
                   )
               })}
@@ -115,7 +108,6 @@ const Problem = (token) => {
           <h2>{selectedProblem.title}</h2>
           <p>Tags: {selectedProblem.tag.join(', ')}</p>
           <p>{selectedProblem.description}</p>
-          {/* Render test cases and other problem details here */}
         </div>
       );
     }

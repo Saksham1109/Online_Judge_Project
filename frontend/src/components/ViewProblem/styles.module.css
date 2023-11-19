@@ -1,0 +1,37 @@
+/* styles.module.css */
+
+.section {
+    margin-bottom: 20px;
+    text-align: left;
+    text-decoration: solid;
+    background-color: grey;
+
+  }
+  
+  .heading {
+    font-size: 24px;
+    margin-bottom: 10px;
+    border-style: solid;
+  }
+  
+  .tagsContainer {
+    margin-top: 10px;
+  }
+  
+  .tag {
+    margin-right: 5px;
+  }
+  
+  .testCasesContainer {
+    margin-top: 10px;
+  }
+  
+  .testCase {
+    margin-bottom: 10px;
+  }
+  
+  .testCaseInput,
+  .testCaseOutput {
+    font-weight: bold;
+  }
+  

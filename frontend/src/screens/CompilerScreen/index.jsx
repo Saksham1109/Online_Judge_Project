@@ -1,57 +1,45 @@
-import React,{useState} from 'react'
+import {React,useState} from 'react';
 import axios from '../../api/axios';
 import styles from './styles.module.css';
-
+import { useLocation } from 'react-router-dom';
+import {useAuth} from '../../context/AuthProvider';
+import ViewProblem from '../../components/ViewProblem';
 
 function CompilerScreen() {
+    const location = useLocation();
 
+    const{token}=useAuth();
     const[code,setCode] = useState('');
     const[language,setLanguage] = useState('cpp');
     const[output,setOutput] = useState('');
-    const[outputStatus,setOutputStatus]=useState('');
-
-    
+    const[outputStatus,setOutputStatus]=useState(''); 
+    const problemId=location.state.problemId; 
+    const email=sessionStorage.getItem("userId");
     const handleSubmitRun  = async()=> {
         
         const payload = {
             language,
-            code
+            code,
+            problemId,
+            email
         };
         try{
-            const {data}=  await axios.post("http://localhost:5000/run",payload);
+            const {data}=  await axios.post("/compiler/submit",payload,
+            {
+                headers:{'Authorization':'Bearer '+token}
+
+            });
             console.log("The data is");
-            console.log(data);
-            let intervalId;
-            let int=0;
-
-            intervalId=setInterval(async()=>{
-                const {data : dataRes} = await axios.get("http://localhost:5000/status",{params:{id:data.jobId}});
-                const{success, job, error} = dataRes;
-                console.log(dataRes);
-                if(success)
-                {
-                    const {status:jobStatus, output:jobOutput} = job;
-                    console.log(job);
-                    if(jobStatus==="pending") return;
-                    setOutput(jobOutput);
-                    setOutputStatus("Success");
-                    clearInterval(intervalId);
-                    int++;
-                }
-                else
-                {
-                    console.log(error);
-                    clearInterval(intervalId);
-                    setOutput(error.stderr);
-                    setOutputStatus("Error");
-                }
-                if(int==10)
-                {
-                    clearInterval(intervalId);
-                }
-
-            },1000);
-            
+            console.log(data); 
+            setOutput(data.message);
+            if(data.status)
+            {
+                setOutputStatus("Accepted");
+            }
+            else{
+                setOutputStatus("Validation Failed");
+            }
+                      
 
         }
         catch({response})
@@ -71,28 +59,19 @@ function CompilerScreen() {
         }
         
     }
-
-    const handleSubmit= () =>
-    {
-        console.log('submit');
-    }
-
-
-
-
   return (
     <div className='compilerScreen'>
         <h1>Online Code Compiler</h1>
        <div className='question-box'>
        <div className='question-area'>
-            This is going to be the querstion area
-
+            <ViewProblem problem1={location.state.problemId}></ViewProblem>
         </div>
         <div className='text-area' >
-        <label>Choose Language ( default C++):</label>
+        <label>Choose Language (default C++):</label>
                <select value={language} onChange={(e)=> { setLanguage(e.target.value)}} >
                 <option value='cpp'>C++</option>
                 <option value='py'>Python</option>
+                <option value='java'>Java</option>
             </select>
             <br></br>
             <br></br>
@@ -100,8 +79,7 @@ function CompilerScreen() {
             setCode(e.target.value);
         }} ></textarea>
         <br></br>
-        <button onClick={handleSubmitRun}>Run</button>
-        <button onClick={handleSubmit}>Submit</button>
+        <button onClick={handleSubmitRun}>Submit</button>
         <br></br>
         Output:: {outputStatus}
         <div className='output'>
@@ -113,4 +91,4 @@ function CompilerScreen() {
   )
 }
 
-export default CompilerScreen
+export default CompilerScreen;

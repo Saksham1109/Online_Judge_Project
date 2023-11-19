@@ -107,7 +107,7 @@ const submitProblem = async (req, res) => {
       if (output !== testCase.output) {
         submissionStatus = `Test cases ${i + 1} failed`;
         return res.json({
-          message: `Test cases ${i + 1} failed`,
+          message: `Test cases ${i + 1} failed`, status :false,
         });
       }
     }
@@ -122,7 +122,7 @@ const submitProblem = async (req, res) => {
     )
 
     console.log(submitProblem);
-    return res.json({ message: "Code Accepted" });
+    return res.json({ message: "Code Accepted",status:true });
 
   } catch (error) {
      console.log(error);

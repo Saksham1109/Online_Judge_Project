@@ -4,11 +4,7 @@ import styles from './styles.module.css';
 import {useAuth} from '../context/AuthProvider';
 
 const PrivateRoutes = ({ children }) => {
-  console.log("yahan pe1");
-  const { token } = useAuth(); 
-  console.log("yahan pe");
-  console.log(token);
- 
+  const { token } = useAuth();  
   return token ? <>{children}</> : <Navigate to="/login" />;
 }
 
