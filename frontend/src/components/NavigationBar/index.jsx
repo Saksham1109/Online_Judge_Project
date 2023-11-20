@@ -29,7 +29,7 @@ const NavigationBar = () => {
         {dropdownOpen && (
           <ul className={styles.dropdownMenu}>
             <li className={styles.dropdownItem}>
-              <Link to="/view-profile">View Profile</Link> {/* Use Link component */}
+              <Link to="/viewProfile">My Profile</Link>
             </li>
             <li className={styles.dropdownItem} onClick={handleLogout}> Logout </li>
           </ul>

@@ -86,7 +86,7 @@ const updateRole = async(req,res)=>{
 
 const getUser = async(req,res)=>{
     try{
-        const { email,  } = req.body;
+        const { email  } = req.body;
         const user = await User.findOne({email : email});
         res.status(200).send({message : "user Found",userId :email, role:user.role});
     }
@@ -95,6 +95,19 @@ const getUser = async(req,res)=>{
     }
 };
 
+const getAllUsers = async(req,res)=>{
+
+    try{
+        console.log(1);
+        const user = await User.find();
+        console.log(user);
+        res.status(200).send({message : "user Found",user:user});
+    }
+    catch (error){
+        return res.status(500).send({message : "Request Processing failed", error :JSON.stringify(error)});
+    }
+};
 
 
-module.exports = { login, register,updateRole ,getUser};
+
+module.exports = { login, register,updateRole ,getUser,getAllUsers};
