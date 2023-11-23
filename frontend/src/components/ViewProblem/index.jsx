@@ -4,11 +4,13 @@ import styles from "./styles.module.css";
 import axios from "../../api/axios";
 import { useAuth } from "../../context/AuthProvider";
 
+
 export default function ViewProblem({ problem1 }) {
   console.log("problem",problem1);
   const PROBLEM_FETCH='/problems/';
   const{token}=useAuth();
   const[getProblem,setProblem]=useState();
+
   // const[loading,setLoading]=useState(false);
 
   // Convert comma-separated tags string to an array if tags are defined
@@ -38,6 +40,7 @@ export default function ViewProblem({ problem1 }) {
       console.log("GetProblem",getProblem);
   return (
     <div>
+      <br></br>
       <div className={styles.section}>
         <h2 className={styles.heading}>Title</h2>
         <p>{getProblem.title}</p>

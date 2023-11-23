@@ -12,6 +12,9 @@ const ViewProfile = ({ userId }) => {
   const {token}=useAuth();
   const loggedInUserEmail={email:sessionStorage.getItem("userId")};
 
+  const payload = {email:loggedInUserEmail
+};
+
   useEffect(() => {
     const fetchAllUserDetails=async()=>{
         try{
@@ -29,7 +32,7 @@ const ViewProfile = ({ userId }) => {
     };
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`/user/getUser`,loggedInUserEmail,
+        const response = await axios.get(`/user/getUser`,payload,
         {
             headers:{'Authorization':'Bearer '+token}
         });
@@ -59,7 +62,8 @@ const ViewProfile = ({ userId }) => {
 
   return (
     <div className={styles.profileContainer}>
-      <h2>User Profile</h2>
+      <br></br><br></br><br></br><br></br><br></br>
+      <h2> All Profiles</h2>
       <table className={styles.table}>
         <thead>
           <tr>

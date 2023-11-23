@@ -1,35 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import styles from './styles.module.css';
 import { Link,Navigate } from 'react-router-dom';
 
 
 const NavigationBar = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
-  
-    const toggleDropdown = () => {
-      setDropdownOpen(!dropdownOpen);
-    };
+    let menuRef=useRef();
+    let userRole=sessionStorage.getItem("role");
     const handleLogout = () => {
       sessionStorage.clear();
       window.location.reload();
-  };
-  
-    return (
-    <nav className={styles.navbar}>
+    };
+
+    useEffect(()=>{
+      let handler = (e)=>{
+        if(typeof menuRef.current !== "undefined")
+        {
+          
+          if(!menuRef.current.contains(e.target)){
+            setDropdownOpen(false);
+            console.log(menuRef.current);
+          } 
+        }
+                
+      }
+      document.addEventListener("mousedown",handler);
+
+      return()=>{
+        document.removeEventListener("mousedown",handler);
+      }
+    });
+ 
+    
+    return ( userRole &&
+    <nav className={styles.navbar} ref={menuRef}>
       <div className={styles.navbrand}> <Link to="/">Online Compiler</Link></div>
-      <ul className={styles.navlist}>
-         {/*<li className={styles.navitem}>
-          <Link to="/problems">Problems</Link>
-          </li> */}
-      </ul>
-      <div className={styles.dropdown}>
-        <button className={styles.dropdownToggle} onClick={toggleDropdown}>
-          View Profile
+      <div ref={menuRef} className={styles.dropdown}  >
+        <button className={styles.dropdownToggle}  onClick={()=>setDropdownOpen(!dropdownOpen)} >
+         Role : {userRole}
         </button>
         {dropdownOpen && (
-          <ul className={styles.dropdownMenu}>
+          <ul className={styles.dropdownMenu} >
             <li className={styles.dropdownItem}>
-              <Link to="/viewProfile">My Profile</Link>
+              <Link to="/viewProfile">Profiles</Link>
             </li>
             <li className={styles.dropdownItem} onClick={handleLogout}> Logout </li>
           </ul>

@@ -119,13 +119,14 @@ const Problem = (token) => {
       <div className={styles.searchBar}>
         <input
           type="text"
-          placeholder="Search by title"
+          placeholder="Search by Problem title"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
       <div>
+        <br></br>
       {renderProblemList()}
       {renderProblemDetails()}
       </div>
