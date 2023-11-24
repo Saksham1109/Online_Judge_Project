@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthProvider';
 import AddProblem from '..//../components/AddProblem';
 import DeleteProblem from '../../components/DeleteProblem';
-import EditProblem from '../../components/EditProblem';
 
 
 
@@ -27,15 +26,6 @@ function MainScreen() {
         </div>}
         {openAddProblemModal && <div>
           <AddProblem closeModal={setOpenAddProblemModal} />
-        </div>}
-        <br></br>
-        
-        { userRole==="admin" &&
-        <div className={styles.addProblemButton}>
-        <button onClick={()=>setEditAddProblemModal(true)}>Edit Problem</button>
-        </div>}
-        {openEditProblemModal && <div>
-          <EditProblem closeModal={setEditAddProblemModal} />
         </div>}
         <br></br>
 

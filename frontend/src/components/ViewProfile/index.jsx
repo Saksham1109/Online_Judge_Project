@@ -6,38 +6,52 @@ import styles from './styles.module.css';
 import { useAuth } from "../../context/AuthProvider";
 import ReactSwitch from 'react-switch';
 const ViewProfile = ({ userId }) => {
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState();
   const[userRole,setRole]=useState('user');
   const [isAdmin, setIsAdmin] = useState(false);
   const {token}=useAuth();
   const loggedInUserEmail={email:sessionStorage.getItem("userId")};
 
-  const payload = {email:loggedInUserEmail
-};
+  const fetchAllUserDetails = async () => {
+    try {
+      console.log("get all users here");
+      const response = await axios.get('/user/getAllUsers', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      console.log("response is",response.data)
+      const data = response.data.map((item) => ({
+        _id: item._id,
+        firstName: item.firstName,
+        lastName: item.lastName,
+        email: item.email,
+        role: item.role
+      }));
+
+      setUserData(data);
+    } catch (error) {
+      console.log('Error fetching all users', error);
+    }
+  };
+
 
   useEffect(() => {
-    const fetchAllUserDetails=async()=>{
-        try{
-            const {data: res} = await axios.get('/user/getAllUsers',
-                {
-                    headers:{'Authorization':'Bearer '+token}
-                });
-                console.log('res',res);
-            setUserData(res.user);
-
-        }catch(error){
-            console.log('Error fetching all users',error);
-        }
-       
-    };
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`/user/getUser`,payload,
-        {
-            headers:{'Authorization':'Bearer '+token}
+        console.log("payload", loggedInUserEmail);
+        const response = await axios.post(`/user/getUser`, loggedInUserEmail, {
+          headers: { 'Authorization': 'Bearer ' + token }
         });
-        setUserData(response.data);
-        setIsAdmin(response.data.role === 'admin');
+
+        const userDetail = {
+          _id: response.data._id,
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          email: response.data.email,
+          role: response.data.role
+        };
+
+        setUserData([userDetail]);
+        setIsAdmin(userDetail.role === 'admin');
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
@@ -45,22 +59,28 @@ const ViewProfile = ({ userId }) => {
 
     fetchUserDetails();
     fetchAllUserDetails();
-  }, [userId]);
+  },[]);
 
-  const handleToggleChange = async () => {
+  const handleToggleChange = async (email,role) => {
     try {
-      const newRole = isAdmin ? 'user' : 'admin';
-      await axios.post('/user/updateRole', {
-        email: userData.email,
-        toRole: newRole,
-      });
-      setIsAdmin(!isAdmin);
+      console.log("email  -------------",email);
+      console.log("role -----------------",role);
+      const newRole = role==="admin" ? 'user' : 'admin';
+      const response = await axios.post('/user/updateRole', {
+        email: email,
+        toRole: newRole
+      },{
+        headers: { 'Authorization': 'Bearer ' + token }});
+      console.log("response for update role",response);
+
+      fetchAllUserDetails();
     } catch (error) {
       console.error('Error updating user role:', error);
     }
+    
   };
 
-  return (
+  return ( userData && isAdmin &&
     <div className={styles.profileContainer}>
       <br></br><br></br><br></br><br></br><br></br>
       <h2> All Profiles</h2>
@@ -79,12 +99,12 @@ const ViewProfile = ({ userId }) => {
               <td>{`${user.firstName} ${user.lastName}`}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
-              <td>
+              {user.email!==loggedInUserEmail.email && <td> 
               <ReactSwitch
-                checked={user.role==='admin'?true:false}
-                onChange={handleToggleChange}
+                checked={user.role === 'admin'}
+                onChange={() => handleToggleChange(user.email,user.role)}
                 ></ReactSwitch>
-              </td>
+              </td>}
             </tr>
           ))}
         </tbody>

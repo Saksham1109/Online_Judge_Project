@@ -71,12 +71,20 @@ const register = async(req,res)=>{
 const updateRole = async(req,res)=>{
     try{
         const { email, toRole } = req.body;
-        const filter = { email: email };
-        const update = { role: toRole };
-        console.log("after validation");
-        const user = await User.findOneAndUpdate(filter,update);
-        res.status(200).send({message : "Role Updated Successfully",userId :email});
-        console.log('success');
+        if(email && toRole)
+        {
+            const filter = { email: email };
+            const update = { role: toRole };
+            console.log("after validation");
+            const user = await User.findOneAndUpdate(filter,update);
+            res.status(200).send({message : "Role Updated Successfully",userId :email});
+            console.log('success');
+        }
+        else
+        {
+            res.status(400).send({message: "Please enter more details"});
+        }
+        
     }
     catch (error){
         return res.status(500).send({message : "Request Processing failed", error :JSON.stringify(error)});
@@ -88,7 +96,11 @@ const getUser = async(req,res)=>{
     try{
         const { email  } = req.body;
         const user = await User.findOne({email : email});
-        res.status(200).send({message : "user Found",userId :email, role:user.role});
+        res.status(200).send({message : "user Found",
+                                userId :email, 
+                                role:user.role,
+                                firstName:user.firstName,
+                                lastName:user.lastName});
     }
     catch (error){
         return res.status(500).send({message : "Request Processing failed", error :JSON.stringify(error)});
@@ -101,7 +113,7 @@ const getAllUsers = async(req,res)=>{
         console.log(1);
         const user = await User.find();
         console.log(user);
-        res.status(200).send({message : "user Found",user:user});
+        res.status(200).send(user);
     }
     catch (error){
         return res.status(500).send({message : "Request Processing failed", error :JSON.stringify(error)});

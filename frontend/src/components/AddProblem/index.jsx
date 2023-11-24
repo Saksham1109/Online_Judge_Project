@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../../api/axios';
 import styles from './styles.module.css';
+import { useAuth } from '../../context/AuthProvider';
 
 function AddProblemModal({ closeModal }) {
   const [formData, setFormData] = useState({
@@ -8,8 +9,10 @@ function AddProblemModal({ closeModal }) {
     tag: '',
     description: '',
     difficulty: 'easy',
-    testCases: [{ input: 1, output: 1 }],
+    testCases: [{ input: 1, output: 1 }]
   });
+
+  const {token} = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,10 +30,13 @@ function AddProblemModal({ closeModal }) {
 
     try {
       // Send the payload using Axios
-      await axios.post('YOUR_API_ENDPOINT', formData);
+      await axios.post('/problems/add', formData,{
+        headers:{"Authorization":"Bearer "+token,email:sessionStorage.getItem("userId")}
+      });
 
       // Close the modal after successful submission
       closeModal(false);
+      window.location.reload();
     } catch (error) {
       console.error('Error submitting the problem:', error);
     }
@@ -107,7 +113,7 @@ function AddProblemModal({ closeModal }) {
             ))}
             <button type="button" onClick={() => setFormData((prevData) => ({
               ...prevData,
-              testCases: [...prevData.testCases, { input: '', output: '' }],
+              testCases: [...prevData.testCases, { input: '', output: '' }]
             }))}>
               Add Test Case
             </button>
