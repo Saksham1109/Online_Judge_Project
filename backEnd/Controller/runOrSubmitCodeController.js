@@ -64,7 +64,6 @@ const executeCode = (filePath, language, inputPath) => {
     default:
       return Promise.reject(`Language is not supported: ${language}`);
   }
-
   return new Promise((resolve, reject) => {
     exec(executeCmd, (error, stdout, stderr) => {
       if (error) {
@@ -76,9 +75,67 @@ const executeCode = (filePath, language, inputPath) => {
   });
 };
 
+async function handleSubmission(problemId, email, status, statusMessage) {
+  try {
+    const existingSubmission = await Submissions.findOne({ problemId, email });
+
+    const submissionData = {
+      problemId,
+      email,
+      submissionStatus: status,
+      submissionStatusMessage: statusMessage,
+      createdDate: new Date(),
+      updatedDate: new Date(),
+    };
+
+    if (existingSubmission) {
+      // Update the existing submission status and message
+      existingSubmission.set(submissionData);
+      await existingSubmission.save();
+      console.log('Submission status updated successfully');
+    } else {
+      // Save a new submission
+      const submission = new Submissions(submissionData);
+      await submission.save();
+      console.log('New submission saved');
+    }
+  } catch (error) {
+    console.error('Error during submission handling:', error);
+  }
+}
+
+async function handleTestFailure(problemId, email, submissionStatusMessage) {
+  try {
+    // Your test case failure logic here
+
+    // Assuming the test case failed
+    await handleSubmission(problemId, email, 'failed', submissionStatusMessage);
+  } catch (error) {
+    console.error('Error during test failure handling:', error);
+
+    // Save the submission with an error status
+    await handleSubmission(problemId, email, 'error', 'Error during test failure handling');
+  }
+}
+
+async function handleSuccessfulSubmission(problemId, email) {
+  try {
+    // Your code execution logic and test case validation here
+
+    // Assuming the test case passed
+    await handleSubmission(problemId, email, 'success', 'Code submitted successfully');
+  } catch (error) {
+    console.error('Error during code submission:', error);
+
+    // Save the submission with an error status
+    await handleSubmission(problemId, email, 'error', 'Error during code submission');
+  }
+}
+
 const submitProblem = async (req, res) => {
   const { language, code, problemId,email } = req.body;
   console.log(email);
+  const success=false;
 
   if (code === undefined) {
     return res.json({ success: false, message: "Code not found" });
@@ -102,10 +159,10 @@ const submitProblem = async (req, res) => {
       console.log(inputPath);
 
       const output = rawOutput.replace(/\r\n/g, "\n").trim();
-      console.log('the output is   '+ output);
-
       if (output !== testCase.output) {
+        sucess=false;
         submissionStatus = `Test cases ${i + 1} failed`;
+        handleTestFailure(problemId, email, submissionStatus);
         return res.json({
           message: `Test cases ${i + 1} failed`, status :false,
         });
@@ -113,15 +170,9 @@ const submitProblem = async (req, res) => {
     }
 
     submissionStatus = "Code Accepted";
-    const submitProblem = await Submissions.create(
-      {
-        problemId,
-        email,
-        submissionStatus
-      }
-    )
+    sucess=true;
+    handleSuccessfulSubmission(problemId, email);
 
-    console.log(submitProblem);
     return res.json({ message: "Code Accepted",status:true });
 
   } catch (error) {

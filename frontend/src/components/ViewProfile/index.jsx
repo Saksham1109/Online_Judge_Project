@@ -83,7 +83,7 @@ const ViewProfile = ({ userId }) => {
   return ( userData && isAdmin &&
     <div className={styles.profileContainer}>
       <br></br><br></br><br></br><br></br><br></br>
-      <h2> All Profiles</h2>
+      <h2 className={styles.header}> All Profiles</h2>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -99,12 +99,13 @@ const ViewProfile = ({ userId }) => {
               <td>{`${user.firstName} ${user.lastName}`}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
-              {user.email!==loggedInUserEmail.email && <td> 
+              <td>
+              {user.email!==loggedInUserEmail.email &&  
               <ReactSwitch
                 checked={user.role === 'admin'}
                 onChange={() => handleToggleChange(user.email,user.role)}
                 ></ReactSwitch>
-              </td>}
+              }</td>
             </tr>
           ))}
         </tbody>

@@ -1,4 +1,6 @@
 const problemdb = require("../Models/Problems");
+const submissiondb = require("../Models/Submissions");
+const {User} = require("../Models/User");
 // Add the  problem 
 const addProblem = async (req, res) => {
   const { title,tag,description,difficulty,testCases } = req.body;
@@ -31,13 +33,39 @@ const addProblem = async (req, res) => {
 
 const getAllProblems = async (req, res) => {
   try {
+    const userEmail = req.body.email; // Assuming you have user information in req.user
+    const user = await User.findOne({email : userEmail});
+    if(!user)
+    {
+        return res.status(401).send({message : "Invalid Email/email not found , please sign in if new "});
+    }
+
+    // Fetch all problems
     const problems = await problemdb.find();
-    res.json({ data: problems });
+
+    // Fetch submission status for the user's email
+    const submissionStatuses = await submissiondb.find({ email: userEmail });
+
+    // Map submission status to their respective problemId
+    const submissionStatusMap = {};
+    submissionStatuses.forEach((submission) => {
+      submissionStatusMap[submission.problemId] = {
+        status: submission.submissionStatus,
+        message: submission.submissionStatusMessage,
+      };
+    });
+
+    // Combine problems and submission statuses
+    const data = problems.map((problem) => ({
+      ...problem.toObject(),
+      submissionStatus: submissionStatusMap[problem.problemId] || { status: 'Not Submitted', message: '' },
+    }));
+
+    res.json({ data });
   } catch (error) {
     res.status(500).json(error);
   }
 };
-
 
 // get specific problem  based on problemID
 const getProblem = async (req, res) => {
@@ -86,14 +114,23 @@ const updateProblem = async (req, res) => {
 
 // delete problem
 const deleteProblem = async (req, res) => {
-  const problem = await problemdb.findByIdAndDelete(req.params.problemId);
   try {
+    console.log(req.params);
+    var query ={title:req.params.title};
+    const problemFind = await problemdb.findOne(query);
+    if (!problemFind) {
+      return res.status(404).json({ message: "Problem not found" });
+    }
+    let id=problemFind;
+    console.log("id     ",id);
+    const problem = await problemdb.findByIdAndDelete(problemFind._id);
+
     if (!problem) {
       return res.status(404).json({ message: "Problem not found" });
     }
     res.status(200).json({ message: "Problem deleted successfully" });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({error:error});
   }
 };
 

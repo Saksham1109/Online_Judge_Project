@@ -3,25 +3,23 @@ import axios from '../../api/axios';
 import styles from './styles.module.css';
 import { useAuth } from '../../context/AuthProvider';
 
-function DeleteProblemModal({closeModal}) {
-    const [formData, setFormData] = useState({
-      title: ''
-    });
-
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
+function DeleteProblemModal({closeModal,selectedProblem}) {
   const {token} = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Send the payload using Axios
-      await axios.post('/problems/add', formData,{
+      console.log("selected Problem",selectedProblem);
+      const data = await axios.delete('/problems/delete/'+selectedProblem.title,{
         headers:{"Authorization":"Bearer "+token,email:sessionStorage.getItem("userId")}
       });
+
+      if(data)
+      {
+        closeModal(false);
+      window.location.reload();
+      }
 
       // Close the modal after successful submission
       closeModal(false);
@@ -47,10 +45,9 @@ function DeleteProblemModal({closeModal}) {
             <input
               type="text"
               name="title"
-              placeholder='Title'
-              value={formData.title}
-              onChange={handleChange}
-              required
+              readOnly
+              placeholder="Problem Title"
+              value={selectedProblem.title}
             />
             <button type="submit">Delete</button>
             <button type="reset" onClick={()=>closeModal(false)}>Cancel</button>
