@@ -17,6 +17,7 @@ const Login = () => {
 	};
 
 	const handleSubmit = async (e) => {
+		console.log("login",e.target);
 		e.preventDefault();
 		try {
 			const { data: res } = await axios.post(LOGIN_URL, data,
@@ -29,7 +30,7 @@ const Login = () => {
 				login(res.token,res.userId);
 				console.log(2);
 				
-				sessionStorage.setItem("token", token);
+				sessionStorage.setItem("role",res.role);
 				window.location = "/";
 				
 		} catch (error) {

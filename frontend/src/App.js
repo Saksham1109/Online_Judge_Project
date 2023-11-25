@@ -9,6 +9,7 @@ import NavigationBar from './components/NavigationBar';
 import PrivateRoutes from './PrivateRoutes';
 import CompilerScreen from './screens/CompilerScreen';
 import Problem from './components/Problems';
+import ViewProfile from './components/ViewProfile';
 
 
 function App() {
@@ -23,54 +24,7 @@ function App() {
           <Route path='/' element={<PrivateRoutes><IntroScreen/></PrivateRoutes>}></Route>
           <Route path='/compilerScreen' element={<PrivateRoutes><CompilerScreen/></PrivateRoutes>}></Route>
           <Route path='/problems' element={<PrivateRoutes><Problem/></PrivateRoutes>}></Route>
-          {/* <Route
-            path="/problems/add"
-            element={
-              <PrivateRoutes>
-                <AddProblem />
-              </PrivateRoutes>
-            }
-          />
-          <Route
-            path="/problems/list"
-            element={
-              <PrivateRoutes>
-                <ProblemList />
-              </PrivateRoutes>
-            }
-          />
-          <Route
-            path="/problems/:problemId"
-            element={
-              <PrivateRoutes>
-                <ProblemDetails />
-              </PrivateRoutes>
-            }
-          />
-          <Route
-            path="/problems/edit/:problemId"
-            element={
-              <PrivateRoutes>
-                <ProblemEdit />
-              </PrivateRoutes>
-            }
-          />
-          <Route
-            path="/submissions/history"
-            element={
-              <PrivateRoutes>
-                <ProblemSubmissions />
-              </PrivateRoutes>
-            }
-          />
-          <Route
-            path="/submissions/leaderBoard"
-            element={
-              <PrivateRoutes>
-                <LeaderBoard />
-              </PrivateRoutes>
-            }
-          /> */}
+          <Route path='/viewProfile' element={<PrivateRoutes><ViewProfile/></PrivateRoutes>}></Route>
         </Routes>
       </AuthProvider>
     </BrowserRouter>

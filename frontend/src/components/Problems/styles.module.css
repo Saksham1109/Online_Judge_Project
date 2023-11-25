@@ -1,13 +1,23 @@
-.problem_table,tr,th,td{
-  margin-top: 5px;
+.problem_table {
+  width: 800px;
+  justify-content: center;
+  align-items: center;
   margin-left: auto;
   margin-right: auto;
-  text-align: left;
-  align-items: center;
-  border: 2px solid;
-  width: 50%;
-  border-radius: 5px;
+}
 
+.problem_table th {
+  width: 10%;
+  text-align: left;
+}
+
+.problem_table td {
+  text-align: left;
+  
+}
+
+.problem_table tr, td, th {
+  border: 2px solid forestgreen;
 }
 
 .searchBar{
@@ -16,8 +26,34 @@
 }
 
 .problemContainer{
-  margin-left:auto;
-  margin-right: auto;
   margin-top: 5px;
+  justify-content: center;
+}
+
+.button_Attempt{
+  background-color: whitesmoke;
+  border: 1px solid;
+  border-radius: 1px;
+  color: green;
+  padding: 1px;
+  width: auto;
+}
+
+.button_Edit{
+  background-color: whitesmoke;
+  border: 1px solid;
+  border-radius: 1px;
+  color: blue;
+  padding: 1px;
+  width: auto;
+}
+
+.button_Delete{
+  background-color: whitesmoke;
+  border: 1px solid;
+  border-radius: 1px;
+  color: red;
+  padding: 1px;
+  width: auto;
 }
 

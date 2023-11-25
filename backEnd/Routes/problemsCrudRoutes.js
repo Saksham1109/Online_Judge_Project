@@ -6,10 +6,10 @@ const auth = require("../MiddleWare/authMiddleware");
 const router = express.Router();
 
 router.post("/problems/add", auth, addProblem);
-router.get("/problems/list", auth, getAllProblems);
+router.post("/problems/list", auth, getAllProblems);
 router.get("/problems/findBy/:title", auth, getProblem);
 router.get("/problems/:problemId", auth, getProblemById);
 router.put("/problems/edit/:problemId", auth, updateProblem);
-router.delete("/problems/delete/:problemId", auth, deleteProblem);
+router.delete("/problems/delete/:title", auth, deleteProblem);
 
 module.exports = router;

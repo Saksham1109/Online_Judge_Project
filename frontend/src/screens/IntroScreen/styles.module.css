@@ -1,4 +1,25 @@
+.mainScreenContainer{
+    overflow: auto;
+    display: inline;
+    z-index: 1;
+}
+
+
 .intro{
     display: flex;
     align-self: center;
 }
+
+
+
+.addProblemButton button{
+    margin-left: 2px;
+    padding: 5px;
+    background-color: cornflowerblue;
+    color: white;
+    width: 10%;
+    height: 10%;
+    border-radius: 8px;
+}
+
+
