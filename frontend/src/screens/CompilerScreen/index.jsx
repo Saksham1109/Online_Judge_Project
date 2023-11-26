@@ -60,13 +60,13 @@ function CompilerScreen() {
         
     }
   return (
-    <div className='compilerScreen'>
+    <div className={styles.compilerScreen}>
         <h1>Online Code Compiler</h1>
-       <div className='question-box'>
-       <div className='question-area'>
+       <div className={styles.question_box}>
+       <div className={styles.question_area}>
             <ViewProblem problem1={location.state.problemId}></ViewProblem>
         </div>
-        <div className='text-area' >
+        <div className={styles.text_area} >
         <label>Choose Language (default C++):</label>
                <select value={language} onChange={(e)=> { setLanguage(e.target.value)}} >
                 <option value='cpp'>C++</option>
@@ -82,7 +82,7 @@ function CompilerScreen() {
         <button onClick={handleSubmitRun}>Submit</button>
         <br></br>
         Output:: {outputStatus}
-        <div className='output'>
+        <div className={styles.output}>
             {output}
         </div>
         </div>

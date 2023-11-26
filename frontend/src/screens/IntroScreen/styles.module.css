@@ -1,7 +1,6 @@
 .mainScreenContainer{
-    overflow: auto;
+    overflow: scroll;
     display: inline;
-    z-index: 1;
 }
 
 

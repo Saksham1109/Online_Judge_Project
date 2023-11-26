@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from '../../api/axios';
 import styles from './styles.module.css';
 import { useAuth } from '../../context/AuthProvider';
+import Modal from 'react-modal';
 
 function DeleteProblemModal({closeModal,selectedProblem}) {
+  Modal.setAppElement('#root');
   const {token} = useAuth();
 
   const handleSubmit = async (e) => {
@@ -30,6 +32,11 @@ function DeleteProblemModal({closeModal,selectedProblem}) {
   };
 
   return (
+    <Modal
+    isOpen={true} // You can control the modal's visibility with a state
+    onRequestClose={closeModal}
+    contentLabel="Delete Problem Modal"
+  >
     <div className={styles.modalBackground}>
       <div className={styles.modalContainer}>
         <div className={styles.titleCloseBtn}>
@@ -55,6 +62,7 @@ function DeleteProblemModal({closeModal,selectedProblem}) {
         </div>
       </div>
     </div>
+    </Modal>
   );
 }
 
