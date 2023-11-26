@@ -22,6 +22,34 @@ const Problem = (token) => {
     fetchAllProblems();
   }, []);
 
+  const openEditProblemModalHandler = () => {
+    if(openEditProblemModal)
+    {
+      closEditProblemModalHandler();
+    }
+    else{
+      setOpenEditProblemModal(true);
+    }
+  };
+
+  const closEditProblemModalHandler = () => {
+    setOpenEditProblemModal(false);
+  };
+
+  const openDeleteProblemModalHandler = () => {
+    if(openEditProblemModal)
+    {
+      closeDelteProblemModalHandler();
+    }
+    else{
+      setOpenDeleteProblemModal(true);
+    }
+  };
+
+  const closeDelteProblemModalHandler = () => {
+    setOpenDeleteProblemModal(false);
+  };
+
   const fetchAllProblems = async () => {
     const payload = { email:sessionStorage.getItem("userId")};
     try {
@@ -76,7 +104,7 @@ const Problem = (token) => {
                       className={styles.button_Edit}
                       onClick={() => {
                         setSelectedProblem(problem);
-                        setOpenEditProblemModal(true);
+                        openEditProblemModalHandler(true);
                       }}
                     >
                       Edit
@@ -115,13 +143,13 @@ const Problem = (token) => {
         {renderProblems()}
         {openEditProblemModal && (
           <div>
-            <EditProblem closeModal={setOpenDeleteProblemModal} />
+            <EditProblem closeModal={openEditProblemModalHandler} />
           </div>
         )}
         {openDeleteProblemModal && (
-          <div>
+          <div className={styles.delete_popup}>
             <DeleteProblem
-              closeModal={setOpenDeleteProblemModal}
+              closeModal={openDeleteProblemModalHandler}
               selectedProblem={selectedProblem}
             />
           </div>

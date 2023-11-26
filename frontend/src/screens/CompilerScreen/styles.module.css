@@ -1,0 +1,75 @@
+.compilerScreen {
+    background-color: white;
+    color: black;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh; /* Set a fixed height for the container */
+    overflow-y: auto; /* Add scroll if content exceeds the height */
+  }
+  
+  h1 {
+    text-align: left;
+  }
+  
+  .question_box {
+    display: flex;
+    width: 100%;
+  }
+  
+  .question_area {
+    width: 50%;
+    padding-right: 20px;
+  }
+  
+  .text_area {
+    width: 50%;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+  
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 16px solid #ddd; /* Border width for the text area */
+    border-radius: 8px; /* Border radius for the text area */
+  }
+  
+  button {
+    background-color: #61dafb;
+    color: #282c34;
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .button:hover {
+    background-color: #4fa3d1;
+  }
+  
+  .output {
+    padding: 10px;
+    background-color: #fff; /* Output background color */
+    margin-top: 10px;
+    border: 1px solid #ddd; /* Border color for the output */
+    border-radius: 5px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    height: 200px; /* Adjust the height as needed */
+    margin-bottom: 10px;
+    border: 16px solid #ddd; /* Border width for the text area */
+    border-radius: 8px; /* Border radius for the text area */
+  }
+  

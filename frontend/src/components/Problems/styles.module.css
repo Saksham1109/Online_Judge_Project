@@ -5,6 +5,9 @@
   margin-left: auto;
   margin-right: auto;
 }
+.delete_popup{
+  z-index: 1;
+}
 
 .problem_table th {
   width: 10%;
@@ -28,6 +31,7 @@
 .problemContainer{
   margin-top: 5px;
   justify-content: center;
+  z-index: 1;
 }
 
 .button_Attempt{
