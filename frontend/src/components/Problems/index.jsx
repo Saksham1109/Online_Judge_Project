@@ -37,7 +37,7 @@ const Problem = (token) => {
   };
 
   const openDeleteProblemModalHandler = () => {
-    if(openEditProblemModal)
+    if(openDeleteProblemModal)
     {
       closeDelteProblemModalHandler();
     }
