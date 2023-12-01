@@ -45,22 +45,23 @@ const getAllProblems = async (req, res) => {
 
     // Fetch submission status for the user's email
     const submissionStatuses = await submissiondb.find({ email: userEmail });
+    console.log("submission statuses , ",submissionStatuses);
 
     // Map submission status to their respective problemId
-    const submissionStatusMap = {};
+    const submissionStatusMap = new Map();
     submissionStatuses.forEach((submission) => {
-      submissionStatusMap[submission.problemId] = {
-        status: submission.submissionStatus,
-        message: submission.submissionStatusMessage,
-      };
+      submissionStatusMap.set(submission.problemId,{status:submission.submissionStatus, message:submission.submissionStatusMessage})
+
     });
+    console.log("submission statuses map new , ",submissionStatusMap);
 
     // Combine problems and submission statuses
     const data = problems.map((problem) => ({
       ...problem.toObject(),
-      submissionStatus: submissionStatusMap[problem.problemId] || { status: 'Not Submitted', message: '' },
+      submissionStatus: submissionStatusMap.get(problem._id.toString()) ||  {status: "Not Attempted",message: " "}
     }));
 
+    console.log("the data is actually ,   ",data);
     res.json({ data });
   } catch (error) {
     res.status(500).json(error);
@@ -102,7 +103,7 @@ const getProblemById = async (req, res) => {
 const updateProblem = async (req, res) => {
   const { title, tag , description, difficulty, testCases } = req.body;
   try {
-    const problem = await problemdb.findByIdAndUpdate(req.params.problemId,{ title, tag, description, difficulty,testCases },{ new: true });
+    const problem = await problemdb.findByIdAndUpdate(req.params.problemId,{ tag, description, difficulty,testCases },{ new: true });
     if (!problem) {
       return res.status(404).json({ message: "Problem not found" });
     }

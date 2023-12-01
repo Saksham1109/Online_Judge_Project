@@ -9,7 +9,7 @@ router.post("/problems/add", auth, addProblem);
 router.post("/problems/list", auth, getAllProblems);
 router.get("/problems/findBy/:title", auth, getProblem);
 router.get("/problems/:problemId", auth, getProblemById);
-router.put("/problems/edit/:problemId", auth, updateProblem);
+router.post("/problems/edit/:problemId", auth, updateProblem);
 router.delete("/problems/delete/:title", auth, deleteProblem);
 
 module.exports = router;

@@ -4,16 +4,16 @@ import styles from './styles.module.css';
 import { useAuth } from '../../context/AuthProvider';
 import Modal from 'react-modal';
 
-function AddProblemModal({ closeModal }) {
+function EditProblemModal({ closeModal,selectedProblem }) {
 
   Modal.setAppElement('#root');
 
   const [formData, setFormData] = useState({
-    title: '',
-    tag: '',
-    description: '',
-    difficulty: 'easy',
-    testCases: [{ input: 1, output: 1 }]
+    title: selectedProblem.title,
+    tag: selectedProblem.tag,
+    description: selectedProblem.description,
+    difficulty: selectedProblem.difficulty,
+    testCases: [{ input: 'Add new test cases', output: 'Add new test cases' }]
   });
 
   const {token} = useAuth();
@@ -32,9 +32,10 @@ function AddProblemModal({ closeModal }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+
     try {
       // Send the payload using Axios
-      await axios.post('/problems/add', formData,{
+      await axios.post('/problems/edit/'+ selectedProblem._id,formData,{
         headers:{"Authorization":"Bearer "+token,email:sessionStorage.getItem("userId")}
       });
 
@@ -58,7 +59,7 @@ function AddProblemModal({ closeModal }) {
           <button onClick={() => closeModal(false)}> X </button>
         </div>
         <div className={styles.title}>
-          <h2>Add a new Problem here</h2>
+          <h2>Edit Problem</h2>
         </div>
         <div className={styles.body}>
           <form onSubmit={handleSubmit}>
@@ -67,31 +68,31 @@ function AddProblemModal({ closeModal }) {
             <input
               type="text"
               name="title"
-              placeholder='Add The title'
-              value={formData.title}
-              onChange={handleChange}
+              readOnly
+              placeholder={selectedProblem.title}
+              value={selectedProblem.title}
               required
+              onChange={handleChange}
             />
             <label>Tag:</label>
             <input
               type="text"
               name="tag"
-              placeholder='Add the related tag'
+              placeholder={selectedProblem.tag}
               value={formData.tag}
               onChange={handleChange}
-              required
             />
             <label>Description:</label>
             <textarea
               name="description"
-              placeholder='Add the Description'
+              placeholder={selectedProblem.description}
               value={formData.description}
               onChange={handleChange}
-              required
             />
             <label>Difficulty:</label>
             <select
               name="difficulty"
+              placeholder={selectedProblem.difficulty}
               value={formData.difficulty}
               onChange={handleChange}
             >
@@ -104,7 +105,7 @@ function AddProblemModal({ closeModal }) {
               <div key={index}>
                 <input
                   type="text"
-                  placeholder={`Input ${index + 1}`}
+                  placeholder="Add new test cases while editing"
                   value={testCase.input}
                   onChange={(e) =>
                     handleTestCaseChange(index, 'input', e.target.value)
@@ -112,7 +113,7 @@ function AddProblemModal({ closeModal }) {
                 />
                 <input
                   type="text"
-                  placeholder={`Output ${index + 1}`}
+                  placeholder='Add new test cases while editing '
                   value={testCase.output}
                   onChange={(e) =>
                     handleTestCaseChange(index, 'output', e.target.value)
@@ -136,4 +137,4 @@ function AddProblemModal({ closeModal }) {
   );
 }
 
-export default AddProblemModal;
+export default EditProblemModal;
