@@ -8,7 +8,6 @@ const cors = require("cors");
 const loginRegisterRoutes = require('./Routes/loginRegisterRoutes');
 const problemsCrudRoutes = require('./Routes/problemsCrudRoutes');
 const runOrSubmitCodeRoutes = require('./Routes/runOrSubmitCodeRoutes');
-const rankingRoutes = require('./Routes/rankingRoutes');
 
 connection();
  
@@ -25,7 +24,6 @@ app.use(cors({
 app.use("/", loginRegisterRoutes);
 app.use("/",problemsCrudRoutes);
 app.use("/", runOrSubmitCodeRoutes);
-// app.use("/", rankingRoutes);
 
 const port = process.env.PORT || 5000;
 
