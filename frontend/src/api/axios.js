@@ -8,7 +8,7 @@ import axios from 'axios';
 
 
 
-const baseURL=process.env.NODE_ENV==='production'? "https://online-judge-project-8d18dv1no.vercel.app" : "http://localhost:5000" ;
+const baseURL=process.env.NODE_ENV==='production'? "https://vercel.com/saksham-mishras-projects-18fd082a/oj-frontend" : "http://localhost:5000" ;
 
 export default axios.create(
     {
