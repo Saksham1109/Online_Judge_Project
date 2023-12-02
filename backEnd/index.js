@@ -18,6 +18,8 @@ app.use(express.json());
 app.use(cors({
     origin:["https://deploy-mern-1whq.vercel.app"],
     methods:["post","get"],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
 }));
 
 app.use("/", loginRegisterRoutes);
