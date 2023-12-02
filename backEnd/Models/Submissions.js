@@ -14,6 +14,10 @@ const submissionSchema = new mongoose.Schema(
         type: String,
         required: true
       },
+      submissionStatusMessage: {
+        type: String,
+        required: true
+      },
       createdDate : {
         type:Date,
         required:true

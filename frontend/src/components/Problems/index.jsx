@@ -80,7 +80,10 @@ const Problem = (token) => {
             <th>Title</th>
             <th>Tag</th>
             <th>Status</th>
-            <th>Attempt / Edit / Delete </th>
+            <th> Attempt </th>
+            <th> Edit </th>
+            <th> Delete </th>
+
           </tr>
           {filteredProblems.map((problem) => (
             <tr key={problem._id}>
@@ -98,7 +101,10 @@ const Problem = (token) => {
                 >
                   Attempt
                 </button>
-                {userRole === 'admin' && (
+                </td>
+                <td>
+                {userRole === 'admin' && 
+                (
                   <>
                     <button
                       className={styles.button_Edit}
@@ -109,6 +115,12 @@ const Problem = (token) => {
                     >
                       Edit
                     </button>
+                    </>
+                )
+                }</td>
+                <td>
+                    {userRole==='admin' &&(
+                      <>
                     <button
                       className={styles.button_Delete}
                       onClick={() => {
@@ -118,9 +130,9 @@ const Problem = (token) => {
                     >
                       Delete
                     </button>
-                  </>
+                    </>
                 )}
-              </td>
+                </td>
             </tr>
           ))}
         </table>
@@ -143,7 +155,7 @@ const Problem = (token) => {
         {renderProblems()}
         {openEditProblemModal && (
           <div>
-            <EditProblem closeModal={openEditProblemModalHandler} />
+            <EditProblem closeModal={openEditProblemModalHandler} selectedProblem={selectedProblem} />
           </div>
         )}
         {openDeleteProblemModal && (
