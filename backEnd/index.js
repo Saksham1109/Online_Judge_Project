@@ -22,7 +22,8 @@ app.use("/",problemsCrudRoutes);
 app.use("/", runOrSubmitCodeRoutes);
 // app.use("/", rankingRoutes);
 
+const port = process.env.PORT || 5000;
 
-app.listen(5000, () => {
-    console.log("The server is listening/setup on port 5000");
+app.listen(port, () => {
+    console.log('The server is listening/setup on port ',port);
 });
