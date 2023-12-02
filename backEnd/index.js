@@ -15,7 +15,10 @@ connection();
 //MiddleWare  used decode data from url
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin:["https://deploy-mern-1whq.vercel.app"],
+    methods:["post","get"],
+}));
 
 app.use("/", loginRegisterRoutes);
 app.use("/",problemsCrudRoutes);
