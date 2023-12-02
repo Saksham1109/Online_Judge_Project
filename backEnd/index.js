@@ -22,6 +22,10 @@ app.use("/", runOrSubmitCodeRoutes);
 
 const port = process.env.PORT || 5000;
 
+app.get("/",(req,res)=>{
+res.send("This app is running on AWS");
+});
+
 app.listen(port, () => {
     console.log('The server is listening/setup on port ',port);
 });
