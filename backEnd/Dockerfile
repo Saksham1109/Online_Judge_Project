@@ -6,4 +6,4 @@ RUN npm i
 RUN npm rebuild bcrypt 
 RUN apk --update add openjdk11 g++ python3 gcc
 EXPOSE 5000
-CMD ["node","index.js"]
+CMD ["npm","start"]
