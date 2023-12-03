@@ -76,6 +76,7 @@ const Login = () => {
 						<button type="submit" className={styles.green_btn}>
 							Sing In
 						</button>
+						please change the site settings to allow insecure data, to access the website
 					</form>
 				</div>
 				<div className={styles.right}>
